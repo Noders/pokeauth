@@ -1,36 +1,37 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
-import { config } from '../../src/config'
 import { UserEntity } from '../../src/models/user'
 import { dbConnection } from '../../src/databaseConnection'
+import { sign } from '../../src/jwt'
+import { corsMiddleware } from '../../src/middlewares'
+import { apiError } from '../../src/apiErrors'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   res.statusCode = 200
-  const password = req.body?.password
-  const email = req.body?.email
-  console.log(req.body)
-
-  if (!password || !email) {
-    res.statusCode = 200
-    res.json({ error: true, errorMessage: 'missing body params' })
-    return
+  try {
+    await corsMiddleware(req, res)
+    const password = req.body?.password
+    const email = req.body?.email
+    if (!password || !email) {
+      apiError(res, 'missing body params', 401)
+      return
+    }
+    const hashedPassword = bcrypt.hashSync(req.body.password, 8)
+    const connection = await dbConnection()
+    const repository = connection.getRepository(UserEntity)
+    const user = new UserEntity()
+    user.email = email
+    user.password = hashedPassword
+    try {
+      const { id } = await repository.save(user)
+      const token = sign
+      res.json({ id, token })
+    } catch (e) {
+      apiError(res, 'could not create account', 401)
+    }
+  } catch (e) {
+    apiError(res, 'could not create account', 401)
   }
-
-  const hashedPassword = bcrypt.hashSync(req.body.password, 8)
-  console.log('creating connection')
-  const connection = await dbConnection()
-  console.log('getting repository')
-  const repository = connection.getRepository(UserEntity)
-  const user = new UserEntity()
-  user.email = email
-  user.password = hashedPassword
-  console.log('save user')
-  const { id } = await repository.save(user)
-  const token = jwt.sign({ id }, config.secret, {
-    expiresIn: 86400, // expires in 24 hours
-  })
-  res.json({ id, token })
 }
 
 export default handler

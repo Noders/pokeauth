@@ -29,6 +29,7 @@
     "@babel/plugin-proposal-decorators": "^7.10.4",
     "@types/pg": "^7.14.4",
     "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
     "jsonwebtoken": "^8.5.1",
     "next": "latest",
     "pg": "^8.3.0",
@@ -39,6 +40,7 @@
   "devDependencies": {
     "@testing-library/react": "^10.0.1",
     "@types/bcryptjs": "^2.4.2",
+    "@types/cors": "^2.8.6",
     "@types/jest": "^25.1.4",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/node": "^13.9.5",
