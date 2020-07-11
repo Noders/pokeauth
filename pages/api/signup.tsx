@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import bcrypt from 'bcryptjs'
-import { UserEntity } from '../../src/models/user'
+import { UserEntity } from '../../src/models'
 import { dbConnection } from '../../src/databaseConnection'
 import { sign } from '../../src/jwt'
 import { corsMiddleware } from '../../src/middlewares'

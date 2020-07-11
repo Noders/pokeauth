@@ -5,6 +5,7 @@ let connection: Connection = null
 export const dbConnection = async () => {
   if (!connection) {
     connection = await createConnection({
+      name: Date.now().toString(),
       type: 'postgres',
       host: 'motty.db.elephantsql.com',
       port: 5432,
