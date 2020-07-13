@@ -7,5 +7,5 @@ export const apiError = (
   extra: object = {}
 ) => {
   res.statusCode = statusCode
-  res.send({ error: true, message, ...extra })
+  res.send({ success: false, message, ...extra })
 }

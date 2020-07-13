@@ -8,6 +8,10 @@ import { apiError } from '../../src/apiErrors'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   res.statusCode = 200
+  if (req.method !== 'POST') {
+    apiError(res, 'unauthorized method', 401)
+    return
+  }
   try {
     await corsMiddleware(req, res)
     const password = req.body?.password

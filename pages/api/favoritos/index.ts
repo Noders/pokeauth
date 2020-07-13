@@ -33,6 +33,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         user.favorites = JSON.stringify(favorites)
         const data = await repository.save(user)
         res.json({ success: true, favorites: JSON.parse(data.favorites) })
+        return
       } catch (e) {
         apiError(res, 'could not save favourites', 401)
         return
@@ -40,6 +41,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     } else if (req.method === 'GET') {
       const favorites = user.favorites
       res.send({ success: true, favorites: JSON.parse(favorites) })
+      return
+    } else {
+      apiError(res, 'unauthorized method', 401)
     }
   } catch (e) {
     apiError(res, 'invalid token', 500)
