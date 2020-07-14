@@ -46,7 +46,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       apiError(res, 'unauthorized method', 401)
     }
   } catch (e) {
-    apiError(res, e.message, 500, { message: e.message })
+    apiError(res, 'invalid token', 500)
     return
   }
 }
