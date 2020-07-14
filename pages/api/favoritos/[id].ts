@@ -8,6 +8,7 @@ import { UserEntity } from '../../../src/models'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await corsMiddleware(req, res)
+  res.statusCode = 200
   try {
     const anId = req?.query?.id
     if (!anId) {
@@ -23,14 +24,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const { id } = decode(token) as { id: string }
     const connection = await dbConnection()
     const repository = connection.getRepository(UserEntity)
-    const user = await repository.findOne({ id })
-    if (!user) {
-      apiError(res, 'could not find user', 500)
-      return
-    }
     if (req.method === 'POST') {
-      res.statusCode = 200
       try {
+        const user = await repository.findOne({ id })
+        if (!user) {
+          apiError(res, 'could not find user', 500)
+          return
+        }
         const favorites = (JSON.parse(user.favorites) || []) as number[]
         favorites.push(pokemonId)
         const newFavorites = Array.from(new Set(favorites.map(Number)))
@@ -46,6 +46,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return
       }
     } else if (req.method === 'GET') {
+      const user = await repository.findOne({ id })
+      if (!user) {
+        apiError(res, 'could not find user', 500)
+        return
+      }
       const favorites = (JSON.parse(user.favorites) || []) as number[]
       const isFavorite = favorites.some((fav) => fav === pokemonId)
       res.json({
@@ -54,7 +59,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       })
       return
     } else if (req.method === 'DELETE') {
-      res.statusCode = 200
+      const user = await repository.findOne({ id })
+      if (!user) {
+        apiError(res, 'could not find user', 500)
+        return
+      }
       try {
         const favorites = ((JSON.parse(user.favorites) ||
           []) as number[]).filter((fav) => fav !== pokemonId)
