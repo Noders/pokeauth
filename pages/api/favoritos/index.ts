@@ -8,10 +8,10 @@ import { corsMiddleware } from '../../../src/middlewares'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await corsMiddleware(req, res)
+  res.statusCode = 200
   try {
     const token = req.headers?.[config.authentication.header]
     const { id } = decode(token) as { id: string }
-    res.statusCode = 200
     const connection = await dbConnection()
     const repository = connection.getRepository(UserEntity)
     const user = await repository.findOne({ id })

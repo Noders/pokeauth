@@ -4,7 +4,7 @@ import { runMiddleware } from './helpers'
 
 // Initializing the cors middleware
 const cors = Cors({
-  methods: ['GET', 'HEAD', 'POST', 'OPTIONS'],
+  methods: ['GET', 'HEAD', 'POST', 'OPTIONS', 'DELETE'],
 })
 
 export const corsMiddleware = (req: NextApiRequest, res: NextApiResponse) =>

@@ -7,13 +7,13 @@ import { corsMiddleware } from '../../src/middlewares'
 import { apiError } from '../../src/apiErrors'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  await corsMiddleware(req, res)
   res.statusCode = 200
   if (req.method !== 'POST') {
     apiError(res, 'unauthorized method', 401)
     return
   }
   try {
-    await corsMiddleware(req, res)
     const requestPassword = req.body?.password
     const email = req.body?.email
     if (!requestPassword || !email) {
