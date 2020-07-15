@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@babel/plugin-proposal-decorators": "^7.10.4",
+    "@f/elapsed-time": "^1.0.0",
     "@types/pg": "^7.14.4",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
